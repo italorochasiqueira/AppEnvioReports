@@ -1,0 +1,14 @@
+[
+    {
+        "cdc": "GCO",
+        "descricao": "Gerência de Controladoria",
+        "email": "email@corp.com",
+        "responsavel": "Cicrano"
+    },
+    {
+        "cdc": "GCP",
+        "descricao": "Gerência de Controladoria",
+        "email": "email@corp.com",
+        "responsavel": "Beltrano"
+    }
+]

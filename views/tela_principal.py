@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from views.cadastro_view2 import CadastroView
+from views.cadastro_view import CadastroView
 
 ctk.set_appearance_mode("System")  # System, Dark, Light
 ctk.set_default_color_theme("blue")
