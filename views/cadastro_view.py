@@ -1,10 +1,15 @@
 import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
 from tkinter import ttk
-from controls.cadastrar_email import cmd_cadastrar_email, listar_cadastro
+from controls.cadastrar_destinatarios import cmd_cadastrar_email, listar_cadastro
 
 class CadastroView(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
+
+        #Controle de estado para as alterações de cadastro
+        self.modo_edicao = False
+        self.cdc_em_edicao = None
 
         # =========================
         # CONFIGURAÇÃO GERAL
@@ -165,7 +170,19 @@ class CadastroView(ctk.CTkFrame):
             "responsavel": self.entry_responsavel.get().strip()
         }
 
-        cmd_cadastrar_email(dados)
+        if self.modo_edicao:
+            cmd_cadastrar_email(self.cdc_em_edicao, dados)
+            CTkMessagebox(
+                title="Sucesso",
+                message="Dados alterados com sucesso!",
+                icon="check"
+            )
+
+        else:
+            cmd_cadastrar_email(dados)
+        
+        self.sair_modo_edicao()
+        self.carregar_tabela()
         self.limpar_formulario()
     
     def limpar_formulario(self):
@@ -193,7 +210,9 @@ class CadastroView(ctk.CTkFrame):
             )
 
     def editar(self):
-        print("Editar registro")
+        print("Editar")
+
+       
 
     def excluir(self):
         print("Excluir registro")
@@ -202,3 +221,10 @@ class CadastroView(ctk.CTkFrame):
         if self.tabela.selection():
             self.btn_editar.configure(state="normal")
             self.btn_excluir.configure(state="normal")
+
+    def sair_modo_edicao(self):
+        self.modo_edicao = False
+        self.cdc_em_edicao = None
+
+        self.entry_cdc.configure(state="normal")
+        self.btn_cadastrar.configure(text="Cadastrar")

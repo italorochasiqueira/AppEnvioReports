@@ -41,3 +41,13 @@ def listar_cadastro():
     
     with open(caminho_arquivo, "r", encoding="utf-8") as f:
         return json.load(f)
+
+def carregar_cadastro_emails():
+
+    dados = listar_cadastro()
+
+    return {
+        item['cdc']: item
+        for item in dados
+    }
+

@@ -2,6 +2,7 @@ import customtkinter as ctk
 
 from views.cadastro_view import CadastroView
 from views.email_view import EmailView
+from views.importar_arquivo_view import ImportarArquivoView
 
 ctk.set_appearance_mode("System")  # System, Dark, Light
 ctk.set_default_color_theme("blue")
@@ -96,9 +97,6 @@ class App(ctk.CTk):
 
     def tela_config(self):
         self.limpar_conteudo()
-        ctk.CTkLabel(
-            self.conteudo,
-            text="Configurações do Sistema",
-            font=ctk.CTkFont(size=18, weight="bold")
-        ).grid(row=0, column=0, pady=20)
+        view = ImportarArquivoView(self.conteudo)
+        view.grid(row=1, column=0, sticky='nsew')
 

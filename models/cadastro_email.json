@@ -1,14 +1,26 @@
 [
     {
-        "cdc": "GCO",
-        "descricao": "Gerência de Controladoria",
-        "email": "email@corp.com",
-        "responsavel": "Cicrano"
+        "cdc": "GTI",
+        "descricao": "Gerência de Tecnologia da Informação",
+        "email": "juliana.alves@postalis.com.br",
+        "responsavel": "Juliana Nogueira Alves"
     },
     {
-        "cdc": "GCP",
+        "cdc": "GCO",
         "descricao": "Gerência de Controladoria",
-        "email": "email@corp.com",
-        "responsavel": "Beltrano"
+        "email": "vinicius.paz@postalis.com.br",
+        "responsavel": "Vinícius da Silva Paz"
+    },
+    {
+        "cdc": "GFO",
+        "descricao": "Gerência Financeira",
+        "email": "roberto.gremler@postalis.com.br",
+        "responsavel": "Roberto Henrique Gremler"
+    },
+    {
+        "cdc": "fdfa",
+        "descricao": "fdafda",
+        "email": "fdafa",
+        "responsavel": "dfafa"
     }
 ]
