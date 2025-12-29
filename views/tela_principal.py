@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
 from views.cadastro_view import CadastroView
+from views.email_view import EmailView
 
 ctk.set_appearance_mode("System")  # System, Dark, Light
 ctk.set_default_color_theme("blue")
@@ -43,14 +44,14 @@ class App(ctk.CTk):
 
         self.btn_envio = ctk.CTkButton(
             self.sidebar,
-            text="Preparar Arquivos",
+            text="E-mail",
             command=self.tela_envio
         )
         self.btn_envio.grid(row=2, column=0, padx=20, pady=10)
 
         self.btn_config = ctk.CTkButton(
             self.sidebar,
-            text="Configurações",
+            text="Importar arquivos",
             command=self.tela_config
         )
         self.btn_config.grid(row=3, column=0, padx=20, pady=10)
@@ -90,11 +91,8 @@ class App(ctk.CTk):
 
     def tela_envio(self):
         self.limpar_conteudo()
-        ctk.CTkLabel(
-            self.conteudo,
-            text="Envio de Arquivos por Área",
-            font=ctk.CTkFont(size=18, weight="bold")
-        ).grid(row=0, column=0, pady=20)
+        view = EmailView(self.conteudo)
+        view.grid(row=1, column=0, sticky='nsew')
 
     def tela_config(self):
         self.limpar_conteudo()
