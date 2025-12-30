@@ -8,7 +8,7 @@
     {
         "cdc": "GCO",
         "descricao": "Gerência de Controladoria",
-        "email": "vinicius.paz@postalis.com.br",
+        "email": "vinicius.paz@postalis.com.br; aline.marinho@postalis.org.br",
         "responsavel": "Vinícius da Silva Paz"
     },
     {
@@ -16,5 +16,11 @@
         "descricao": "Gerência Financeira",
         "email": "roberto.gremler@postalis.com.br",
         "responsavel": "Roberto Henrique Gremler"
+    },
+    {
+        "cdc": "GOV",
+        "descricao": "Gerência de Governança",
+        "email": "juliana.barbosa@postalis.org.br",
+        "responsavel": "Juliana"
     }
 ]

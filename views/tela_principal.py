@@ -1,8 +1,10 @@
 import customtkinter as ctk
-
+import os
+from PIL import Image
 from views.cadastro_view import CadastroView
 from views.email_view import EmailView
 from views.importar_arquivo_view import ImportarArquivoView
+from controls.caminho_relativo import caminho_relativo_figuras
 
 ctk.set_appearance_mode("System")  # System, Dark, Light
 ctk.set_default_color_theme("blue")
@@ -10,6 +12,9 @@ ctk.set_default_color_theme("blue")
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
+
+        icone = caminho_relativo_figuras("icons/icon_postalis.ico")
+        self.iconbitmap(str(icone))
 
         # Configurações da janela
         self.title("Aplicativo de Envio de E-mails")
@@ -28,10 +33,19 @@ class App(ctk.CTk):
         self.sidebar.grid(row=0, column=0, sticky="ns")
         self.sidebar.grid_rowconfigure(4, weight=1)
 
+        #Caminho para a imagem na barra lateral
+        logo_path = caminho_relativo_figuras("icons/brasao-logo-postalis.jpg")
+   
+        self.logo_img = ctk.CTkImage(
+            light_image = Image.open(logo_path),
+            dark_image=Image.open(logo_path),
+            size=(100, 100) #campo para ajustar o tamanho da imagem
+        )
+
         lbl_logo = ctk.CTkLabel(
             self.sidebar,
-            text="Postalis - CPF",
-            font=ctk.CTkFont(size=18, weight="bold")
+            image=self.logo_img,
+            text=""
         )
         lbl_logo.grid(row=0, column=0, padx=20, pady=(20, 10))
 

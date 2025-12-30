@@ -1,0 +1,11 @@
+pyinstaller `
+  --onefile `
+  --windowed `
+  --name AppReports `
+  --icon "icons\icon_postalis.ico" `
+  --add-data "icons;icons" `
+  --add-data "docs;docs" `
+  --add-data "models;models" `
+  --collect-submodules views `
+  --collect-submodules controls `
+  main.py

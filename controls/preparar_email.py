@@ -14,10 +14,13 @@ def preparar_lista_emails(resultado_validacao):
     emails = []
 
     for cdc, dados in resultado_validacao['valido'].items():
+
+        assunto = f"[{cdc}] - {modelo.get('assunto')}"
+        
         emails.append({
             "de": modelo.get("de"),
             "to": dados['email'],
-            "subject": modelo.get("assunto"),
+            "subject": assunto,
             "body": modelo.get("corpo"),
             "attachments": dados["arquivo"]
         })

@@ -1,13 +1,17 @@
 from pathlib import Path
+import sys
 
 def caminho_relativo_app():
-    '''Função para caminho relativo do programa'''
-    try:
-        caminho_relativo = Path(__file__).resolve(strict=True).parent.parent
-        print(f"[DEBUG] O caminho relativo acessado é: {caminho_relativo}")
-        return caminho_relativo
-    except NameError:
-        print("[DEBUG] __file__ não está definido. A função pode estar a ser executada interativamente.")
-        return Path.cwd() 
+    """
+    Retorna o diretório base do app:
+    - Em desenvolvimento: pasta do projeto
+    - Em executável (PyInstaller): pasta temporária (_MEIPASS)
+    """
+    if getattr(sys, 'frozen', False):
+        return Path(sys._MEIPASS)
+    else:
+        return Path(__file__).resolve().parent.parent
 
+def caminho_relativo_figuras(caminho):
+    return caminho_relativo_app() / caminho
 
