@@ -51,3 +51,46 @@ def carregar_cadastro_emails():
         for item in dados
     }
 
+def cmd_editar_email(cdc_original: str, novos_dados: dict):
+    validar_dados(novos_dados)
+
+    caminho_base = caminho_relativo_app()
+    caminho_arquivo = caminho_base / "models" / "cadastro_email.json"
+
+    if not caminho_arquivo.exists():
+        raise FileNotFoundError("Arquivo de cadastro não encontrado.")
+
+    with open(caminho_arquivo, "r", encoding="utf-8") as f:
+        registros = json.load(f)
+
+    for i, registro in enumerate(registros):
+        if registro["cdc"] == cdc_original:
+            registros[i] = novos_dados
+            break
+    else:
+        raise ValueError("Registro não encontrado para edição.")
+
+    with open(caminho_arquivo, "w", encoding="utf-8") as f:
+        json.dump(registros, f, ensure_ascii=False, indent=4)
+
+
+def cmd_excluir_email(cdc: str):
+    caminho_base = caminho_relativo_app()
+    caminho_arquivo = caminho_base / "models" / "cadastro_email.json"
+
+    if not caminho_arquivo.exists():
+        raise FileNotFoundError("Arquivo de cadastro não encontrado.")
+
+    with open(caminho_arquivo, "r", encoding="utf-8") as f:
+        registros = json.load(f)
+
+    registros_filtrados = [
+        registro for registro in registros
+        if registro.get("cdc") != cdc
+    ]
+
+    if len(registros) == len(registros_filtrados):
+        raise ValueError("Registro não encontrado para exclusão.")
+
+    with open(caminho_arquivo, "w", encoding="utf-8") as f:
+        json.dump(registros_filtrados, f, ensure_ascii=False, indent=4)

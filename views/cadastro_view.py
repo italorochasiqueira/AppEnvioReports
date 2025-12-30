@@ -1,7 +1,8 @@
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
 from tkinter import ttk
-from controls.cadastrar_destinatarios import cmd_cadastrar_email, listar_cadastro
+from controls.cadastrar_destinatarios import cmd_cadastrar_email, listar_cadastro, cmd_excluir_email
+
 
 class CadastroView(ctk.CTkFrame):
     def __init__(self, master):
@@ -83,6 +84,17 @@ class CadastroView(ctk.CTkFrame):
             command=self.cadastrar
         )
         self.btn_cadastrar.grid(row=0, column=0)
+
+        self.btn_cancelar = ctk.CTkButton(
+            form_action_frame,
+            text="Cancelar",
+            width=120,
+            height=40,
+            fg_color="#9E9E9E",
+            command=self.cancelar_edicao
+        )
+        self.btn_cancelar.grid(row=0, column=1, padx=(10, 0))
+        self.btn_cancelar.grid_remove()
 
         # =========================
         # CARD - TABELA
@@ -170,20 +182,30 @@ class CadastroView(ctk.CTkFrame):
             "responsavel": self.entry_responsavel.get().strip()
         }
 
-        if self.modo_edicao:
-            cmd_cadastrar_email(self.cdc_em_edicao, dados)
-            CTkMessagebox(
-                title="Sucesso",
-                message="Dados alterados com sucesso!",
-                icon="check"
-            )
+        try:
+            if self.modo_edicao:
+                from controls.cadastrar_destinatarios import cmd_editar_email
 
-        else:
-            cmd_cadastrar_email(dados)
-        
-        self.sair_modo_edicao()
-        self.carregar_tabela()
-        self.limpar_formulario()
+                cmd_editar_email(self.cdc_em_edicao, dados)
+
+                CTkMessagebox(
+                    title="Sucesso",
+                    message="Registro atualizado com sucesso!",
+                    icon="check"
+                )
+            else:
+                cmd_cadastrar_email(dados)
+
+            self.sair_modo_edicao()
+            self.limpar_formulario()
+            self.carregar_tabela()
+
+        except Exception as e:
+            CTkMessagebox(
+                title="Erro",
+                message=str(e),
+                icon="cancel"
+            )
     
     def limpar_formulario(self):
         self.entry_cdc.delete(0, "end")
@@ -210,17 +232,91 @@ class CadastroView(ctk.CTkFrame):
             )
 
     def editar(self):
-        print("Editar")
+        selecionado = self.tabela.selection()
+
+        if not selecionado:
+            return
+
+        valores = self.tabela.item(selecionado[0], "values")
+
+        self.entry_cdc.delete(0, "end")
+        self.entry_descricao.delete(0, "end")
+        self.entry_email.delete(0, "end")
+        self.entry_responsavel.delete(0, "end")
+
+        self.entry_cdc.insert(0, valores[0])
+        self.entry_descricao.insert(0, valores[1])
+        self.entry_email.insert(0, valores[2])
+        self.entry_responsavel.insert(0, valores[3])
+
+        # 🔒 Estado de edição
+        self.modo_edicao = True
+        self.cdc_em_edicao = valores[0]
+
+        self.entry_descricao.focus()
+
+        self.entry_cdc.configure(state="disabled")
+        self.btn_cadastrar.configure(text="Salvar alterações")
+        self.btn_cancelar.grid()
 
        
 
     def excluir(self):
-        print("Excluir registro")
+        selecionado = self.tabela.selection()
 
-    def on_select(self, event):
-        if self.tabela.selection():
-            self.btn_editar.configure(state="normal")
-            self.btn_excluir.configure(state="normal")
+        if not selecionado:
+            return
+
+        valores = self.tabela.item(selecionado[0], "values")
+        cdc = valores[0]
+
+        resposta = CTkMessagebox(
+            title="Confirmar exclusão",
+            message=f"Deseja realmente excluir o registro CDC {cdc}?",
+            icon="question",
+            option_1="Cancelar",
+            option_2="Excluir"
+        ).get()
+
+        if resposta != "Excluir":
+            return
+
+        try:
+            cmd_excluir_email(cdc)
+
+            CTkMessagebox(
+                title="Sucesso",
+                message="Registro excluído com sucesso!",
+                icon="check"
+            )
+
+            self.carregar_tabela()
+            self.limpar_formulario()
+            self.sair_modo_edicao()
+
+            self.btn_editar.configure(state="disabled")
+            self.btn_excluir.configure(state="disabled")
+
+        except Exception as e:
+            CTkMessagebox(
+                title="Erro",
+                message=str(e),
+                icon="cancel"
+            )
+    def cancelar_edicao(self):
+        resposta = CTkMessagebox(
+            title="Cancelar edição",
+            message="Deseja cancelar a edição? As alterações não serão salvas.",
+            icon="question",
+            option_1="Não",
+            option_2="Sim"
+        ).get()
+
+        if resposta != "Sim":
+            return
+
+        self.limpar_formulario()
+        self.sair_modo_edicao()
 
     def sair_modo_edicao(self):
         self.modo_edicao = False
@@ -228,3 +324,17 @@ class CadastroView(ctk.CTkFrame):
 
         self.entry_cdc.configure(state="normal")
         self.btn_cadastrar.configure(text="Cadastrar")
+        self.btn_cancelar.grid_remove()
+
+        self.tabela.selection_remove(self.tabela.selection())
+        self.btn_editar.configure(state="disabled")
+        self.btn_excluir.configure(state="disabled")
+
+    def on_select(self, event):
+        selecionado = self.tabela.selection()
+
+        estado = "normal" if selecionado else "disabled"
+
+        self.btn_editar.configure(state=estado)
+        self.btn_excluir.configure(state=estado)
+
